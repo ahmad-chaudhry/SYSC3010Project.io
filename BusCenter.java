@@ -13,12 +13,10 @@ public class BusCenter implements UDPCommunication{
 			DatagramSocket socket = null ;
 			InetAddress ip = InetAddress.getLocalHost();
 			byte buffer[] = null;
-			while(true) {
 				buf = totalPassengers;
-				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
+				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,portSend); 
 				if(buffer.length == 0)break;
 				packet.send(packet);
-			}
 		}
 		catch( Exception e ){
 	         System.out.println( e ) ;
@@ -32,16 +30,17 @@ public class BusCenter implements UDPCommunication{
 		try {
 			byte[] receive = new byte[65535];
 			DatagramPacket packetR = null;
-			while(true) {
 				packetR = new DatagramPacket(receive,receive.length);
 				if(receive.length == 0)break;
 				receivedTotalPassengers = socketR.receive(packetR);
 				receive = new byte[65535];
-			}
 		}
 		catch(Exception e) {
 			System.out.println(e);
 		}
+	}
+	public static void main(String[] args) {
+		UDPReceive(1678);
 	}
 
 }
