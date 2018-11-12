@@ -1,9 +1,11 @@
 package sysc3010Project;
 
 import java.net.*;
+import java.nio.ByteBuffer;
+import java.util.LinkedList;
 
 public class Bus implements UDPCommunication{
-	inkedList<int> receivedTotalPassengers = new LinkedList<int>();
+	LinkedList<Byte> receivedTotalPassengers = new LinkedList<Byte>();
 	private static int i=0;
 	private int numberOfPassengersEntering = 5;
 	private int numberOfPassengersExiting = 1;
@@ -22,25 +24,26 @@ public class Bus implements UDPCommunication{
 		return (numberOfPeopleEntering - numberOfPeopleExiting);
 	}
 	public void addPassengers(int x) {
-		if(receivedTotalPassengers[i]!=0) {
+		if(receivedTotalPassengers.get(i)!=0) {
 			numberOfPassengersEntering++;
 		}
 	}
 	public void removePassengers(int x) {
-		if(receivedTotalPassengers[i]!=0) {
+		if(receivedTotalPassengers.get(i)!=0) {
 			numberOfPassengersExiting++;
 		}
 	}
 	
+	@SuppressWarnings("null")
 	public void UDPSend(InetAddress address, int port) {
+		DatagramSocket socket = null ;
 		try {
-			DatagramSocket socket = null ;
-			InetAddress ip = InetAddress.getLocalHost();
-			byte buffer[] = null;
-				buf = totalPassengers(numberOfPeopleEntering, numberOfPeopleExiting);
+			byte buffer[];
+			
+				int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
+				buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
-				if(buffer.length == 0)break;
-				packet.send(packet);
+				socket.send(packet);
 		}
 		catch( Exception e ){
 	         System.out.println( e ) ;
@@ -54,13 +57,22 @@ public class Bus implements UDPCommunication{
 		byte[] receive = new byte[65535];
 		DatagramPacket packetR = null;
 			packetR = new DatagramPacket(receive,receive.length);
-			if(receive.length == 0)break;
-			receivedTotalPassengers.add(i,socketR.receive(packetR));
+			receivedTotalPassengers.addAll(socketR.receive(packetR));
 			receive = new byte[65535];
 			i++;
 	}
 	
 	public static void main(String[] args) {
 		UDPSend(127.0.0.1,1678);
+	}
+	@Override
+	public void UDPSend(Packet x) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void UDPReceive(Packet x) {
+		// TODO Auto-generated method stub
+		
 	}
 }
