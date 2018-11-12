@@ -1,12 +1,13 @@
-package 3010Project;
+package syscThirdYear;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.IOException;
+import java.net.*;
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 
 public class Bus implements UDPCommunication{
-	inkedList<int> receivedTotalPassengers = new LinkedList<int>();
+	LinkedList<Integer> receivedTotalPassengers = new LinkedList<>();
+	int hold;
 	private static int i=0;
 	private int numberOfPassengersEntering = 5;
 	private int numberOfPassengersExiting = 1;
@@ -25,26 +26,25 @@ public class Bus implements UDPCommunication{
 		return (numberOfPeopleEntering - numberOfPeopleExiting);
 	}
 	public void addPassengers(int x) {
-		if(receivedTotalPassengers[i]!=0) {
+		if(receivedTotalPassengers.get(i)!=0) {
 			numberOfPassengersEntering++;
 		}
 	}
 	public void removePassengers(int x) {
-		if(receivedTotalPassengers[i]!=0) {
+		if(receivedTotalPassengers.get(i)!=0) {
 			numberOfPassengersExiting++;
 		}
 	}
 	
+	@SuppressWarnings("null")
 	public void UDPSend(InetAddress address, int port) {
 		DatagramSocket socket = null ;
 		try {
-			InetAddress ip = InetAddress.getLocalHost();
-			byte buffer[] = null;
-				int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
-				buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
-				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
-				if(buffer.length == 0)break;
-				socket.send(packet);
+			byte buffer[];
+			int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
+			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
+			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
+			socket.send(packet);
 		}
 		catch( Exception e ){
 	         System.out.println( e ) ;
@@ -53,18 +53,23 @@ public class Bus implements UDPCommunication{
 	         if( socket != null )socket.close() ;
 	      }
 	}
-	public void UDPReceive(int portReceive) {
-		DatagramSocket socketR = new DatagramSocket(portReceive);
-		byte[] receive = new byte[65535];
-		DatagramPacket packetR = null;
+	public void UDPReceive(int portReceive){
+		DatagramSocket socketR=null;
+		try {
+			socketR = new DatagramSocket(portReceive);
+			byte[] receive = new byte[65535];
+			DatagramPacket packetR = null;
 			packetR = new DatagramPacket(receive,receive.length);
-			if(receive.length == 0)break;
-			receivedTotalPassengers.add(i,socketR.receive(packetR));
+			socketR.receive(packetR);
 			receive = new byte[65535];
-			i++;
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 	
-	public static void main(String[] args) {
-		UDPSend(127.0.0.1,1678);
+	public void main(String[] args) throws UnknownHostException {
+		InetAddress ip = InetAddress.getLocalHost();
+		UDPSend(ip,1678);
 	}
 }
