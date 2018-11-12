@@ -1,6 +1,5 @@
-package syscThirdYear;
+package sysc3010Project;
 
-import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -71,5 +70,15 @@ public class Bus implements UDPCommunication{
 	public void main(String[] args) throws UnknownHostException {
 		InetAddress ip = InetAddress.getLocalHost();
 		UDPSend(ip,1678);
+	}
+	@Override
+	public void UDPSend(Packet x) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void UDPReceive(Packet x) {
+		// TODO Auto-generated method stub
+		
 	}
 }
