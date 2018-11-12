@@ -1,4 +1,4 @@
-package sysc3010Project;
+package 3010Project;
 
 import java.net.*;
 
