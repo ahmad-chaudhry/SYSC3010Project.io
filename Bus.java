@@ -1,11 +1,12 @@
-package sysc3010Project;
+package 3010Project;
 
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
 
 public class Bus implements UDPCommunication{
-	LinkedList<Byte> receivedTotalPassengers = new LinkedList<Byte>();
+	inkedList<int> receivedTotalPassengers = new LinkedList<int>();
 	private static int i=0;
 	private int numberOfPassengersEntering = 5;
 	private int numberOfPassengersExiting = 1;
@@ -24,25 +25,25 @@ public class Bus implements UDPCommunication{
 		return (numberOfPeopleEntering - numberOfPeopleExiting);
 	}
 	public void addPassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
+		if(receivedTotalPassengers[i]!=0) {
 			numberOfPassengersEntering++;
 		}
 	}
 	public void removePassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
+		if(receivedTotalPassengers[i]!=0) {
 			numberOfPassengersExiting++;
 		}
 	}
 	
-	@SuppressWarnings("null")
 	public void UDPSend(InetAddress address, int port) {
 		DatagramSocket socket = null ;
 		try {
-			byte buffer[];
-			
+			InetAddress ip = InetAddress.getLocalHost();
+			byte buffer[] = null;
 				int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
 				buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
+				if(buffer.length == 0)break;
 				socket.send(packet);
 		}
 		catch( Exception e ){
@@ -57,22 +58,13 @@ public class Bus implements UDPCommunication{
 		byte[] receive = new byte[65535];
 		DatagramPacket packetR = null;
 			packetR = new DatagramPacket(receive,receive.length);
-			receivedTotalPassengers.addAll(socketR.receive(packetR));
+			if(receive.length == 0)break;
+			receivedTotalPassengers.add(i,socketR.receive(packetR));
 			receive = new byte[65535];
 			i++;
 	}
 	
 	public static void main(String[] args) {
 		UDPSend(127.0.0.1,1678);
-	}
-	@Override
-	public void UDPSend(Packet x) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void UDPReceive(Packet x) {
-		// TODO Auto-generated method stub
-		
 	}
 }
