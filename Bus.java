@@ -5,8 +5,8 @@ import java.net.*;
 public class Bus implements UDPCommunication{
 	inkedList<int> receivedTotalPassengers = new LinkedList<int>();
 	private static int i=0;
-	private int numberOfPassengersEntering;
-	private int numberOfPassengersExiting;
+	private int numberOfPassengersEntering = 5;
+	private int numberOfPassengersExiting = 1;
 	
 	public Bus(int numberOfPassengersEntering, int numberOfPassengersExiting) {
 		this.numberOfPassengersEntering = numberOfPassengersEntering;
@@ -37,12 +37,10 @@ public class Bus implements UDPCommunication{
 			DatagramSocket socket = null ;
 			InetAddress ip = InetAddress.getLocalHost();
 			byte buffer[] = null;
-			while(true) {
 				buf = totalPassengers(numberOfPeopleEntering, numberOfPeopleExiting);
 				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
 				if(buffer.length == 0)break;
 				packet.send(packet);
-			}
 		}
 		catch( Exception e ){
 	         System.out.println( e ) ;
@@ -55,12 +53,14 @@ public class Bus implements UDPCommunication{
 		DatagramSocket socketR = new DatagramSocket(portReceive);
 		byte[] receive = new byte[65535];
 		DatagramPacket packetR = null;
-		while(true) {
 			packetR = new DatagramPacket(receive,receive.length);
 			if(receive.length == 0)break;
 			receivedTotalPassengers.add(i,socketR.receive(packetR));
 			receive = new byte[65535];
 			i++;
-		}
+	}
+	
+	public static void main(String[] args) {
+		UDPSend(127.0.0.1,1678);
 	}
 }
