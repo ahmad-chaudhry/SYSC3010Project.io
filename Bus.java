@@ -3,6 +3,8 @@ package sysc3010Project;
 import java.net.*;
 
 public class Bus implements UDPCommunication{
+	inkedList<int> receivedTotalPassengers = new LinkedList<int>();
+	private static int i=0;
 	private int numberOfPassengersEntering;
 	private int numberOfPassengersExiting;
 	
@@ -19,36 +21,46 @@ public class Bus implements UDPCommunication{
 	public int totalPassengers(int numberOfPeopleEntering, int numberOfPeopleExiting) {
 		return (numberOfPeopleEntering - numberOfPeopleExiting);
 	}
+	public void addPassengers(int x) {
+		if(receivedTotalPassengers[i]!=0) {
+			numberOfPassengersEntering++;
+		}
+	}
+	public void removePassengers(int x) {
+		if(receivedTotalPassengers[i]!=0) {
+			numberOfPassengersExiting++;
+		}
+	}
 	
-	public void UDPSend(Packet x) {
-		DatagramSocket socket = null ;
-		try
-	      {
-	         // Convert the arguments first, to ensure that they are valid
-	         InetAddress host = InetAddress.getByName( "10.0.0.12" ) ;
-	         int port = 132;
-	         socket = new DatagramSocket() ;
-	         
-	         while (true)
-	         {
-	        		 int message = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
-	        		 if (message.length()==0) break;
-	        		 byte [] data = message.getBytes();
-	        		 DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
-	        		 socket.send( packet );
-	         } 
-	      }
-		catch( Exception e )
-	      {
+	public void UDPSend(InetAddress address, int port) {
+		try {
+			DatagramSocket socket = null ;
+			InetAddress ip = InetAddress.getLocalHost();
+			byte buffer[] = null;
+			while(true) {
+				buf = totalPassengers(numberOfPeopleEntering, numberOfPeopleExiting);
+				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
+				if(buffer.length == 0)break;
+				packet.send(packet);
+			}
+		}
+		catch( Exception e ){
 	         System.out.println( e ) ;
 	      }
-	      finally
-	      {
-	         if( socket != null )
-	            socket.close() ;
+	      finally{
+	         if( socket != null )socket.close() ;
 	      }
 	}
-	public void UDPReceive(Packet x) {
-		
+	public void UDPReceive(int portReceive) {
+		DatagramSocket socketR = new DatagramSocket(portReceive);
+		byte[] receive = new byte[65535];
+		DatagramPacket packetR = null;
+		while(true) {
+			packetR = new DatagramPacket(receive,receive.length);
+			if(receive.length == 0)break;
+			receivedTotalPassengers.add(i,socketR.receive(packetR));
+			receive = new byte[65535];
+			i++;
+		}
 	}
 }
