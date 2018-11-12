@@ -1,6 +1,8 @@
-package 3010Project;
+package syscThirdYear;
 
 import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteBuffer;
 
 public class BusCenter implements UDPCommunication{
 	
@@ -8,15 +10,14 @@ public class BusCenter implements UDPCommunication{
 	private int totalPassengers;
 	
 	public void UDPSend(InetAddress address, int portSend) {
+		DatagramSocket socket = null ;
 		try {
-			int portS = null;
-			DatagramSocket socket = null ;
+			int portS;
 			InetAddress ip = InetAddress.getLocalHost();
 			byte buffer[] = null;
-				buf = totalPassengers;
-				DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,portSend); 
-				if(buffer.length == 0)break;
-				packet.send(packet);
+			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
+			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,portSend); 
+			socket.send(packet);
 		}
 		catch( Exception e ){
 	         System.out.println( e ) ;
@@ -26,20 +27,20 @@ public class BusCenter implements UDPCommunication{
 	      }
 	}
 	public void UDPReceive(int portReceive) {
-		DatagramSocket socketR = new DatagramSocket(portReceive);
+		DatagramSocket socketR;
 		try {
 			byte[] receive = new byte[65535];
+			socketR = new DatagramSocket(portReceive);
 			DatagramPacket packetR = null;
-				packetR = new DatagramPacket(receive,receive.length);
-				if(receive.length == 0)break;
-				receivedTotalPassengers = socketR.receive(packetR);
-				receive = new byte[65535];
+			packetR = new DatagramPacket(receive,receive.length);
+			socketR.receive(packetR);
+			receive = new byte[65535];
 		}
 		catch(Exception e) {
 			System.out.println(e);
 		}
 	}
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		UDPReceive(1678);
 	}
 
