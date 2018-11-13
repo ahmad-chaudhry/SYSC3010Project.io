@@ -2,7 +2,7 @@ package syscThirdYear;
 
 import java.net.*;
 import java.nio.ByteBuffer;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class BusCenter implements UDPCommunication{
 	
@@ -11,8 +11,16 @@ public class BusCenter implements UDPCommunication{
 	//global variable to keep track of the total passengers
 	private static int receivedTotalPassengers;
 	private int totalPassengers;
-	
-	
+	//Array List to keep track of all busses
+	private static ArrayList<Bus> allBusses = new ArrayList<Bus>();
+	//getter for ArrayList
+	public ArrayList<Bus> getList(){
+		return allBusses;
+	}
+	public void addBusToList(Bus x) {
+		allBusses.add(x);
+	}
+	//
 	//Send value from bus center
 	public void UDPSend(InetAddress address, int portSend) {
 		DatagramSocket socket = null ;
