@@ -25,15 +25,11 @@ public class Bus implements UDPCommunication{
 	public int totalPassengers() {
 		return (numberOfPassengersEntering - numberOfPassengersExiting);
 	}
-	public void addPassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
-			numberOfPassengersEntering++;
-		}
+	public void addPassengers() {
+		numberOfPassengersEntering++;
 	}
-	public void removePassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
-			numberOfPassengersExiting++;
-		}
+	public void removePassengers() {
+		numberOfPassengersExiting++;
 	}
 	
 	//send total passenger number to the bus center
@@ -41,7 +37,7 @@ public class Bus implements UDPCommunication{
 		DatagramSocket socket = null ;
 		try {
 			byte buffer[];
-			int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
+			int totalPassengers = totalPassengers();
 			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
 			socket.send(packet);
