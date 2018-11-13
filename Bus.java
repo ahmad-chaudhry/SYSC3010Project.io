@@ -25,23 +25,39 @@ public class Bus implements UDPCommunication{
 	public int totalPassengers() {
 		return (numberOfPassengersEntering - numberOfPassengersExiting);
 	}
-	public void addPassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
-			numberOfPassengersEntering++;
-		}
+	public void addPassengers() {
+		numberOfPassengersEntering++;
 	}
-	public void removePassengers(int x) {
-		if(receivedTotalPassengers.get(i)!=0) {
-			numberOfPassengersExiting++;
-		}
+	public void removePassengers() {
+		numberOfPassengersExiting++;
 	}
 	
+	private String busCapacity = "green";
+	
+	public String getBusCapacityZone() {
+		return busCapacity;
+	}
+	public void busCapacityZone() {
+		//Bus Capacity == 10
+		//Green Zone = <=3 passengers
+		//Yellow Zone >4 && <=7
+		//Red Zone >7 && <=10
+		if(this.totalPassengers()>0 && this.totalPassengers()<4) {
+			busCapacity = "green";
+		}
+		if(this.totalPassengers()>4 && this.totalPassengers()<8) {
+			busCapacity = "yellow";
+		}
+		if(this.totalPassengers()>8 && this.totalPassengers()<11) {
+			busCapacity = "red";
+		}
+	}
 	//send total passenger number to the bus center
 	public void UDPSend(InetAddress address, int port) {
 		DatagramSocket socket = null ;
 		try {
 			byte buffer[];
-			int totalPassengers = totalPassengers(numberOfPassengersEntering, numberOfPassengersExiting);
+			int totalPassengers = totalPassengers();
 			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,port); 
 			socket.send(packet);
