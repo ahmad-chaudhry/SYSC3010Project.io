@@ -7,12 +7,16 @@ import java.util.ArrayList;
 public class BusCenter implements UDPCommunication{
 	
 	//Pretend database until partner finished Database
-	private BusDatabase db = new BusDatabase();
+	private ArrayList<Integer> dataBase = new ArrayList<Integer>();
 	//global variable to keep track of the total passengers
 	private static int receivedTotalPassengers;
 	private int totalPassengers;
 	//Array List to keep track of all busses
 	private static ArrayList<Bus> allBusses = new ArrayList<Bus>();
+	
+	public ArrayList<Integer> getDB() {
+		return dataBase;
+	}
 	//getter for ArrayList
 	public ArrayList<Bus> getList(){
 		return allBusses;
@@ -59,7 +63,7 @@ public class BusCenter implements UDPCommunication{
 	
 	//Add value to the Database that has been received from the BUS
 	public void updateDatabase(int x) {
-		db.addToDB(x);
+		dataBase.add(x);
 	}
 	
 	public void main(String[] args) {
