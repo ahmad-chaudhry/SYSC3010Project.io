@@ -9,8 +9,8 @@ public class Bus implements UDPCommunication{
 	LinkedList<Integer> receivedTotalPassengers = new LinkedList<>();
 	int hold;
 	private static int i=0;
-	private int numberOfPassengersEntering = 5;
-	private int numberOfPassengersExiting = 1;
+	private int numberOfPassengersEntering;
+	private int numberOfPassengersExiting;
 	
 	public Bus(int numberOfPassengersEntering, int numberOfPassengersExiting) {
 		this.numberOfPassengersEntering = numberOfPassengersEntering;
@@ -22,8 +22,8 @@ public class Bus implements UDPCommunication{
 	public int getNumberOfPassengersExiting() {
 		return numberOfPassengersExiting;
 	}
-	public int totalPassengers(int numberOfPeopleEntering, int numberOfPeopleExiting) {
-		return (numberOfPeopleEntering - numberOfPeopleExiting);
+	public int totalPassengers() {
+		return (numberOfPassengersEntering - numberOfPassengersExiting);
 	}
 	public void addPassengers(int x) {
 		if(receivedTotalPassengers.get(i)!=0) {
@@ -36,7 +36,7 @@ public class Bus implements UDPCommunication{
 		}
 	}
 	
-	@SuppressWarnings("null")
+	//send total passenger number to the bus center
 	public void UDPSend(InetAddress address, int port) {
 		DatagramSocket socket = null ;
 		try {
@@ -53,6 +53,8 @@ public class Bus implements UDPCommunication{
 	         if( socket != null )socket.close() ;
 	      }
 	}
+	
+	//Receive values 
 	public void UDPReceive(int portReceive){
 		DatagramSocket socketR=null;
 		try {
@@ -68,8 +70,10 @@ public class Bus implements UDPCommunication{
 		}
 	}
 	
-	public void main(String[] args) throws UnknownHostException {
+	public void main(String[] args) throws UnknownHostException{
 		InetAddress ip = InetAddress.getLocalHost();
+		Bus testBus = new Bus(5,4);
 		UDPSend(ip,1678);
+		System.out.println("null");
 	}
 }
