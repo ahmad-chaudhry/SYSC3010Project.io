@@ -1,43 +1,46 @@
 package syscThirdYear;
 
+import java.io.*;
+import java.util.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
+import java.nio.*;
 public class BusCenter implements UDPCommunication{
 	
 	//Pretend database until partner finished Database
 	private ArrayList<Integer> dataBase = new ArrayList<Integer>();
-	//global variable to keep track of the total passengers
-	private static int receivedTotalPassengers;
-	private int totalPassengers;
-	//Array List to keep track of all busses
-	private static ArrayList<Bus> allBusses = new ArrayList<Bus>();
 	
+	//global variable to keep track of the total passengers
+	private int totalPassengers;
+	
+	//get pretend database
 	public ArrayList<Integer> getDB() {
 		return dataBase;
 	}
+	
+	//Array List to keep track of all busses
+	private static ArrayList<Bus> allBusses = new ArrayList<Bus>();
+	
 	//getter for ArrayList
 	public ArrayList<Bus> getList(){
 		return allBusses;
 	}
+	//Add new bus to our list of busses
 	public void addBusToList(Bus x) {
 		allBusses.add(x);
 	}
-	//
+	
 	//Send value from bus center
 	public void UDPSend(InetAddress address, int portSend) {
 		DatagramSocket socket = null ;
 		try {
 			int portS;
-			InetAddress ip = InetAddress.getLocalHost();
 			byte buffer[] = null;
 			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,portSend); 
 			socket.send(packet);
 		}
 		catch( Exception e ){
-	         System.out.println( e ) ;
+	         System.out.println( e );
 	      }
 	      finally{
 	         if( socket != null )socket.close() ;
@@ -48,13 +51,14 @@ public class BusCenter implements UDPCommunication{
 	public void UDPReceive(int portReceive) {
 		DatagramSocket socketR;
 		try {
-			byte[] receive = new byte[65535];
 			socketR = new DatagramSocket(portReceive);
-			DatagramPacket packetR = null;
-			packetR = new DatagramPacket(receive,receive.length);
+			byte[] buffer = new byte[256];
+			DatagramPacket packetR = new DatagramPacket(buffer,buffer.length);
 			socketR.receive(packetR);
-			receive = new byte[65535];
-			//return 
+			InetAddress addressSendBack = packetR.getAddress();
+			int portSendBack = packetR.getPort();
+			packetR = new DatagramPacket(buffer, buffer.length,addressSendBack,portSendBack);
+			socketR.send(packetR);
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -66,8 +70,10 @@ public class BusCenter implements UDPCommunication{
 		dataBase.add(x);
 	}
 	
-	public void main(String[] args) {
-		UDPReceive(1678);
+	public static void main(String[] args) {
+		BusCenter testCenter = new BusCenter();
+		int portReceive = 1678;
+		testCenter.UDPReceive(portReceive);
 	}
 
 }
