@@ -1,58 +1,75 @@
 package syscThirdYear;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.LinkedList;
+import java.nio.*;
+
 
 public class Bus implements UDPCommunication{
-	LinkedList<Integer> receivedTotalPassengers = new LinkedList<>();
-	int hold;
 	private static int i=0;
+	
+	//global variable to keep track of people entering the bus
 	private int numberOfPassengersEntering;
+	
+	//global variable to keep track of people exiting the bus
 	private int numberOfPassengersExiting;
 	
-	public Bus(int numberOfPassengersEntering, int numberOfPassengersExiting) {
-		this.numberOfPassengersEntering = numberOfPassengersEntering;
-		this.numberOfPassengersExiting = numberOfPassengersExiting;
+	//Bus capacity of this bus (green,yellow,or red) refer to busCapacityZone() method for zone ranges
+		private String busCapacity;
+		
+	//initializer for the bus
+	public Bus() {
+		this.numberOfPassengersEntering = 0;
+		this.numberOfPassengersExiting = 0;
+		busCapacityZone(this); //sets the bus capacity based on people on the bus at the start
 	}
+	
+	//getter for number of people entering
 	public int getNumberOfPassengersEntering() {
 		return numberOfPassengersEntering;
 	}
+	
+	//getter for number of people exiting
 	public int getNumberOfPassengersExiting() {
 		return numberOfPassengersExiting;
 	}
+	
+	//returns the total number of people on the bus
 	public int totalPassengers() {
 		return (numberOfPassengersEntering - numberOfPassengersExiting);
 	}
-	public void addPassengers() {
+	
+	//adds a passenger to the bus (interface with hardware code to increment any time somebody enters the bus)
+	public void addPassenger() {
 		numberOfPassengersEntering++;
 	}
-	public void removePassengers() {
+	
+	//removes a passenger to the bus (interface with hardware code to decrement any time somebody gets off the bus)
+	public void removePassenger() {
 		numberOfPassengersExiting++;
 	}
-	
-	private String busCapacity = "green";
 	
 	public String getBusCapacityZone() {
 		return busCapacity;
 	}
-	public void busCapacityZone() {
+	public void busCapacityZone(Bus bus) {
 		//Bus Capacity == 10
 		//Green Zone = <=3 passengers
 		//Yellow Zone >4 && <=7
 		//Red Zone >7 && <=10
-		if(this.totalPassengers()>0 && this.totalPassengers()<4) {
+		if(this.totalPassengers()>=0 && this.totalPassengers()<=3) {
 			busCapacity = "green";
 		}
-		if(this.totalPassengers()>4 && this.totalPassengers()<8) {
+		if(this.totalPassengers()>=3 && this.totalPassengers()<=7) {
 			busCapacity = "yellow";
 		}
-		if(this.totalPassengers()>8 && this.totalPassengers()<11) {
+		if(this.totalPassengers()>=8 && this.totalPassengers()<=10) {
 			busCapacity = "red";
 		}
 	}
 	//send total passenger number to the bus center
+	@SuppressWarnings("null")
 	public void UDPSend(InetAddress address, int port) {
 		DatagramSocket socket = null ;
 		try {
@@ -63,11 +80,12 @@ public class Bus implements UDPCommunication{
 			socket.send(packet);
 		}
 		catch( Exception e ){
-	         System.out.println( e ) ;
+	         System.out.println( e );
 	      }
 	      finally{
-	         if( socket != null )socket.close() ;
+	         if( socket != null )socket.close();
 	      }
+		
 	}
 	
 	//Receive values 
@@ -75,21 +93,32 @@ public class Bus implements UDPCommunication{
 		DatagramSocket socketR=null;
 		try {
 			socketR = new DatagramSocket(portReceive);
-			byte[] receive = new byte[65535];
-			DatagramPacket packetR = null;
-			packetR = new DatagramPacket(receive,receive.length);
+			byte[] buffer = new byte[256];
+			DatagramPacket packetR = new DatagramPacket(buffer,buffer.length);
 			socketR.receive(packetR);
-			receive = new byte[65535];
+			InetAddress addressSendBack = packetR.getAddress();
+			int portSendBack = packetR.getPort();
+			packetR = new DatagramPacket(buffer, buffer.length,addressSendBack,portSendBack);
+			socketR.send(packetR);
+			//receive = new byte[65535];
 		}
 		catch(Exception e) {
 			System.out.println(e);
 		}
 	}
 	
-	public void main(String[] args) throws UnknownHostException{
-		InetAddress ip = InetAddress.getLocalHost();
-		Bus testBus = new Bus(5,4);
-		UDPSend(ip,1678);
-		System.out.println("null");
+	public static void main(String[] args) throws UnknownHostException{
+		//byte[] ipAddr = new byte[]{172, 17, 32, 1};
+		byte[] ipTest = new byte[] {10,0,0,1};
+		InetAddress testAddrSend = InetAddress.getByAddress(ipTest);
+		//InetAddress localhost = InetAddress.getLocalHost();
+		//InetAddress addrSend = InetAddress.getByAddress(ipAddr);
+		int portSend = 1678;
+		Bus testBus = new Bus();
+		testBus.addPassenger();
+		testBus.addPassenger();
+		testBus.addPassenger();
+		testBus.addPassenger();
+		testBus.UDPSend(testAddrSend, portSend);
 	}
 }
