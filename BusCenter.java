@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import java.nio.*;
-public class BusCenter implements UDPCommunication{
+public class BusCenter{
 	
 	//Pretend database until partner finished Database
 	private ArrayList<Integer> dataBase = new ArrayList<Integer>();
@@ -28,37 +28,19 @@ public class BusCenter implements UDPCommunication{
 	public void addBusToList(Bus x) {
 		allBusses.add(x);
 	}
-	
-	//Send value from bus center
-	public void UDPSend(InetAddress address, int portSend) {
-		DatagramSocket socket = null ;
-		try {
-			int portS;
-			byte buffer[] = null;
-			buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
-			DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,portSend); 
-			socket.send(packet);
-		}
-		catch( Exception e ){
-	         System.out.println( e );
-	      }
-	      finally{
-	         if( socket != null )socket.close() ;
-	      }
-	}
-	
 	//Receive values (of traffic on Bus) from the bus and store it 
 	public void UDPReceive(int portReceive) {
-		DatagramSocket socketR;
 		try {
-			socketR = new DatagramSocket(portReceive);
+			DatagramSocket socketR = new DatagramSocket(portReceive);
 			byte[] buffer = new byte[256];
 			DatagramPacket packetR = new DatagramPacket(buffer,buffer.length);
 			socketR.receive(packetR);
-			InetAddress addressSendBack = packetR.getAddress();
-			int portSendBack = packetR.getPort();
-			packetR = new DatagramPacket(buffer, buffer.length,addressSendBack,portSendBack);
-			socketR.send(packetR);
+			System.out.println(new String(packetR.getData()).trim() ) ;
+			//InetAddress addressSendBack = packetR.getAddress();
+			//int portSendBack = packetR.getPort();
+			//packetR = new DatagramPacket(buffer, buffer.length,addressSendBack,portSendBack);
+			//socketR.send(packetR);
+			
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -72,7 +54,7 @@ public class BusCenter implements UDPCommunication{
 	
 	public static void main(String[] args) {
 		BusCenter testCenter = new BusCenter();
-		int portReceive = 1678;
+		int portReceive = 120;
 		testCenter.UDPReceive(portReceive);
 	}
 
