@@ -6,6 +6,7 @@ import java.net.*;
 import java.nio.*;
 
 public class Bus{
+	
 	private static int i=0;
 	private int PACKETSIZE = 256;
 	
@@ -70,7 +71,7 @@ public class Bus{
 	}
 	//send total passenger number to the bus center
 	@SuppressWarnings("null")
-	public void UDPSend(Bus testBus, InetAddress address, int port) {
+	public void UDPSend(Bus testBus,InetAddress address, int port) {
 		DatagramSocket datagramSocket = null ;
 		try {
 			//byte buffer[];
@@ -92,7 +93,7 @@ public class Bus{
 	public static void main(String[] args) throws Exception{
 		//byte[] ipAddr = new byte[]{172, 17, 32, 1};
 		//InetAddress i = InetAddress.getByName("127.0.0.1");
-		InetAddress addr = InetAddress.getByName("172.17.32.1");
+		InetAddress addr = InetAddress.getByName("169.254.164.174");
 		//InetAddress localhost = InetAddress.getLocalHost();
 		//InetAddress addrSend = InetAddress.getByAddress(ipAddr);
 		int portSend = 120;
@@ -101,6 +102,6 @@ public class Bus{
 		testBus.addPassenger();
 		testBus.addPassenger();
 		testBus.addPassenger();
-		testBus.UDPSend(testBus, addr, portSend);
+		testBus.UDPSend(testBus,addr, portSend);
 	}
 }
