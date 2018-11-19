@@ -1,6 +1,3 @@
-package mongoConnector;
-
-
 import java.net.UnknownHostException;
 
 import com.mongodb.client.*;
@@ -63,6 +60,21 @@ public class mongoClass {
 		k++;
 	}
 	
+	
+	System.out.println();
+	System.out.println();
+	System.out.println();
+	
+	DB db4 = mongoClient.getDB("Capacity");
+	DBCollection coll4 = db4.getCollection("Capacity");
+	DBCursor cursor4 = coll4.find();
+	
+	while(cursor4.hasNext())
+	{
+		int m =1;
+		System.out.println(cursor4.next());
+		m++;
+	}
 
 	
 	
@@ -70,14 +82,13 @@ public class mongoClass {
 	
 	
 	} 
-		catch(UnknownHostException e)
+		catch( UnknownHostException e)
 	{
 		e.printStackTrace();
 	}
 	
 }
-}
-		
+}	
 	
 
 
