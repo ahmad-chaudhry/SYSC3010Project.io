@@ -1,14 +1,10 @@
 package syscThirdYear;
 
-import java.io.*;
-import java.util.*;
 import java.net.*;
-import java.nio.*;
 
 public class Bus{
-	
-	private static int i=0;
-	private int PACKETSIZE = 256;
+	//ID or Bus number
+	private Integer ID;
 	
 	//global variable to keep track of people entering the bus
 	private int numberOfPassengersEntering;
@@ -17,13 +13,15 @@ public class Bus{
 	private int numberOfPassengersExiting;
 	
 	//Bus capacity of this bus (green,yellow,or red) refer to busCapacityZone() method for zone ranges
-		private String busCapacity;
+	private String busCapacity;
 		
 	//initializer for the bus
-	public Bus() {
+	public Bus(Integer ID) {
 		this.numberOfPassengersEntering = 0;
 		this.numberOfPassengersExiting = 0;
 		//busCapacityZone(this); //sets the bus capacity based on people on the bus at the start
+		this.ID = ID;
+		this.updateBusCapacityZone();
 	}
 	
 	//getter for number of people entering
@@ -51,10 +49,12 @@ public class Bus{
 		numberOfPassengersExiting++;
 	}
 	
+	//returns the Bus Capacity zone
 	public String getBusCapacityZone() {
 		return busCapacity;
 	}
-	public void busCapacityZone(Bus bus) {
+	
+	public void updateBusCapacityZone() {
 		//Bus Capacity == 10
 		//Green Zone = <=3 passengers
 		//Yellow Zone >4 && <=7
@@ -70,15 +70,13 @@ public class Bus{
 		}
 	}
 	//send total passenger number to the bus center
-	@SuppressWarnings("null")
 	public void UDPSend(Bus testBus,InetAddress address, int port) {
 		DatagramSocket datagramSocket = null ;
 		try {
-			//byte buffer[];
-			//buffer = ByteBuffer.allocate(4).putInt(totalPassengers).array();
 			datagramSocket = new DatagramSocket();
-			String totalPassengersSTR = testBus.totalPassengers().toString();
-			byte[] buffer = totalPassengersSTR.getBytes();
+			this.updateBusCapacityZone();
+			String sendStr = new String(this.ID.toString()+ "," +this.getBusCapacityZone());
+			byte[] buffer = sendStr.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
 	        datagramSocket.send(packet);
 		}
@@ -91,13 +89,9 @@ public class Bus{
 		
 	}
 	public static void main(String[] args) throws Exception{
-		//byte[] ipAddr = new byte[]{172, 17, 32, 1};
-		//InetAddress i = InetAddress.getByName("127.0.0.1");
 		InetAddress addr = InetAddress.getByName("169.254.164.174");
-		//InetAddress localhost = InetAddress.getLocalHost();
-		//InetAddress addrSend = InetAddress.getByAddress(ipAddr);
 		int portSend = 120;
-		Bus testBus = new Bus();
+		Bus testBus = new Bus(99);
 		testBus.addPassenger();
 		testBus.addPassenger();
 		testBus.addPassenger();
