@@ -1,6 +1,8 @@
-package syscThirdYear;
 
 import java.net.*;
+import jssc.SerialPort; 
+import jssc.SerialPortException;
+import java.util.ArrayList;
 
 public class Bus{
 	//ID or Bus number
@@ -92,14 +94,43 @@ public class Bus{
 	      }
 		
 	}
+	
 	public static void main(String[] args) throws Exception{
-		InetAddress addr = InetAddress.getByName("169.254.164.174");
-		int portSend = 120;
+		InetAddress addr = InetAddress.getByName("10.0.0.12");
+		int portSend = 175;
 		Bus testBus = new Bus(99);
-		testBus.addPassenger();
-		testBus.addPassenger();
-		testBus.addPassenger();
-		testBus.addPassenger();
-		testBus.UDPSend(testBus,addr, portSend);
+		
+		SerialPort serialPort = new SerialPort("/dev/ttyACM0");
+        int i = 0;
+        
+        while (i != 8) {
+           try {
+                serialPort.openPort();//Open serial port
+                serialPort.setParams(9600, 8, 1, 0);//Set params.
+                String s = serialPort.readString(1);
+                
+                if(s=="1") {
+                	testBus.addPassenger();
+                }if(s=="2") {
+                	testBus.removePassenger();
+                }if(s=="3") {
+                	System.out.println("Person entered and Person exited");
+                }if(s=="4") {
+                	System.out.println("Sensor 1 Trigger Error");
+                }else if(s=="5") {
+                	System.out.println("Sensor 2 Trigger Error");
+                }else if(s=="6") {
+                	System.out.println("Sensor 3 Trigger Error");
+                }
+                
+                System.out.println(s);
+                serialPort.closePort();//Close serial port
+                i++;
+                testBus.UDPSend(testBus,addr, portSend);
+            }
+           catch (SerialPortException ex) {
+                System.out.println(9);
+            }
+        }
 	}
 }
