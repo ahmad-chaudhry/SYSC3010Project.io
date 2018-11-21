@@ -24,6 +24,10 @@ public class Bus{
 		this.updateBusCapacityZone();
 	}
 	
+	public Integer getID() {
+		return this.ID;
+	}
+	
 	//getter for number of people entering
 	public int getNumberOfPassengersEntering() {
 		return numberOfPassengersEntering;
