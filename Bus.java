@@ -1,8 +1,8 @@
+package syscThirdYear;
 
 import java.net.*;
 import jssc.SerialPort; 
 import jssc.SerialPortException;
-import java.util.ArrayList;
 
 public class Bus{
 	//ID or Bus number
@@ -97,13 +97,13 @@ public class Bus{
 	
 	public static void main(String[] args) throws Exception{
 		InetAddress addr = InetAddress.getByName("10.0.0.12");
-		int portSend = 175;
+		int portSend = 120;
 		Bus testBus = new Bus(99);
 		
+		//serial port code done by partner just for hardware (arduino) 
 		SerialPort serialPort = new SerialPort("/dev/ttyACM0");
-        int i = 0;
-        
-        while (i != 8) {
+
+        while (true) {
            try {
                 serialPort.openPort();//Open serial port
                 serialPort.setParams(9600, 8, 1, 0);//Set params.
@@ -125,7 +125,6 @@ public class Bus{
                 
                 System.out.println(s);
                 serialPort.closePort();//Close serial port
-                i++;
                 testBus.UDPSend(testBus,addr, portSend);
             }
            catch (SerialPortException ex) {
