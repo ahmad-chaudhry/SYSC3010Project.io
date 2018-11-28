@@ -7,27 +7,26 @@ import java.sql.*;
 public class BusCenter{
 	
 	/**
-	 * GLOBAL variables needed for the Database
+	 * Global variables for Database Updating
 	 */
 	static Connection conn = null;
-	static Scanner scan = new Scanner(System.in);
 	static ArrayList<String> columns;
 	static ArrayList<String> colvalues;
 	//Variables to send to the Database
-	private String finalBusID;
-	private String finalBusZone;
+	private String finalBusID = "1";
+	private String finalBusZone = "green";
 	
 	/**
 	 * 
 	 * GLOBAL variables needed for the Receiving of data
 	 * 
 	 */
-	//Total number of busses associated with the BusCenter
-	private static int totalBusses;
 	//Final string received from UDPReceive
 	private static String receivedStr;
+	
 	//List containing the two received values [0]=BusID, [1]=Zone
 	List<String> dbUpdate;
+	
 	//Array List to keep track of all busses
 	private static ArrayList<Bus> allBusses = new ArrayList<Bus>();
 	
@@ -52,11 +51,11 @@ public class BusCenter{
 				receivedStr = new String(packetR.getData());
 				dbUpdate = Arrays.asList(receivedStr.split(","));
 				updateReceivedVariables();
-				for(int i=0; i<totalBusses;i++) {
-					if(allBusses.get(i).getID().toString().equals(finalBusID)) {
-						updateDatabase();
-					}
-				}
+				//for(int i=0; i<allBusses.size();i++) {
+					//if(allBusses.get(i).getID().toString().equals(finalBusID)) {
+				updateDatabase();
+					//}
+				//}
 			}
 		}
 		catch(Exception e) {
@@ -74,53 +73,59 @@ public class BusCenter{
 		finalBusID = dbUpdate.get(0);
 		finalBusZone = dbUpdate.get(1);
 	}
-	
-	//Add value to the Database that has been received from the BUS
-	public void updateDatabase() {
-		//Database work done by other group member
-		String userName = "root";
-		String password = "";
-		String url = "jdbc:mysql://localhost:3306/buscapacitymonitoring?usessl=false";
-		try {
-			conn = DriverManager.getConnection(url,userName,password);
-			String busnumber = finalBusID;
-			columns = new ArrayList<String>();
-			DatabaseMetaData md = conn.getMetaData();
-			ResultSet rs = md.getColumns(null, null, "details", "%");
-			while(rs.next())
-			{
-				columns.add(rs.getString(4));
-			}
-			colvalues = new ArrayList<String>();
-			for (int i = 0; i< columns.size();i++)
-			{
-				System.out.println(columns.get(i) + ": ");
-				String change = finalBusZone;
-				
-				colvalues.add(change);
-			}
-			
-			Statement stmt = conn.createStatement();
-			for (int i = 0; i<columns.size(); i++)
-			{
-				String query = "UPDATE details SET " + columns.get(i) + " = '" + colvalues.get(i)      
-				+ "' WHERE " + "  busnumber = " + busnumber;
-				stmt.executeUpdate(query);
-			}
-			
-			stmt.close();
-			conn.close();
-		}catch (SQLException e) {	
-			e.printStackTrace();
-		}
+	public String getfinalID() {
+		return this.finalBusID;
 	}
-	public static void main(String[] args) {
+	public String getfinalBusZone() {
+		return this.finalBusZone;
+	}
+	
+	public void createDatabase() throws SQLException{
+		
+	}
+	//Add value to the Database that has been received from the BUS
+	public void updateDatabase() throws SQLException {
+		
+
+			String userName = "admin";
+			String password = "password";
+			String url = "jdbc:mysql://localhost:3306/busmonitoringsystem?usessl=false";
+				
+			try {
+				conn = DriverManager.getConnection(url,userName,password); 
+				columns = new ArrayList<String>();
+					
+				DatabaseMetaData md = conn.getMetaData();
+				ResultSet rs = md.getColumns(null, null, "details1", "%");
+				while(rs.next())
+				{
+					columns.add(rs.getString(4));
+				}
+					
+					
+				Statement stmt = conn.createStatement();
+				for (int i = 0; i<columns.size(); i++)
+				{
+					String query = "UPDATE details1 SET capacityzones =" + finalBusZone + "where busnumber =" + finalBusID; 
+					stmt.executeUpdate(query);
+				}
+					
+				stmt.close();
+				conn.close();
+				} catch (SQLException e) 
+				
+				{
+					e.printStackTrace();
+				}
+	}
+	
+	public static void main(String[] args) throws SQLException {
 		BusCenter testCenter = new BusCenter();
 		int portReceive = 120;
-		Bus testBus1 = new Bus(1);
+		Bus testBus1 = new Bus(99);
 		allBusses.add(testBus1);
-		testCenter.updateReceivedVariables();
-		testCenter.UDPReceive(portReceive);
+		//testCenter.UDPReceive(portReceive);
+		testCenter.updateDatabase();
 	}
 
 }
