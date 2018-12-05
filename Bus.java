@@ -81,7 +81,7 @@ public class Bus{
 		try {
 			datagramSocket = new DatagramSocket();
 			this.updateBusCapacityZone();
-			String sendStr = new String(this.ID.toString()+ "," +this.getBusCapacityZone());
+			String sendStr = new String(this.ID.toString()+ "," +this.getBusCapacityZone()+",");
 			byte[] buffer = sendStr.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
 	        datagramSocket.send(packet);
@@ -98,7 +98,8 @@ public class Bus{
 	public static void main(String[] args) throws Exception{
 		InetAddress addr = InetAddress.getByName("10.0.0.12");
 		int portSend = 120;
-		Bus testBus = new Bus(99);
+		int busNum = 1;
+		Bus testBus = new Bus(busNum);
 		
 		//serial port code done by partner just for hardware (arduino) 
 		SerialPort serialPort = new SerialPort("/dev/ttyACM0");
