@@ -13,8 +13,8 @@ public class BusCenter{
 	static ArrayList<String> columns;
 	static ArrayList<String> colvalues;
 	//Variables to send to the Database
-	private String finalBusID = "1";
-	private String finalBusZone = "green";
+	private String finalBusID;
+	private String finalBusZone;
 	
 	/**
 	 * 
@@ -50,12 +50,8 @@ public class BusCenter{
 				System.out.println(new String(packetR.getData()).trim() ) ;
 				receivedStr = new String(packetR.getData());
 				dbUpdate = Arrays.asList(receivedStr.split(","));
-				updateReceivedVariables();
-				//for(int i=0; i<allBusses.size();i++) {
-					//if(allBusses.get(i).getID().toString().equals(finalBusID)) {
+				updateReceivedVariables();		
 				updateDatabase();
-					//}
-				//}
 			}
 		}
 		catch(Exception e) {
@@ -80,43 +76,40 @@ public class BusCenter{
 		return this.finalBusZone;
 	}
 	
-	public void createDatabase() throws SQLException{
-		
-	}
 	//Add value to the Database that has been received from the BUS
 	public void updateDatabase() throws SQLException {
-		
-
-			String userName = "admin";
-			String password = "password";
-			String url = "jdbc:mysql://localhost:3306/busmonitoringsystem?usessl=false";
+		String userName = "admin";
+		String password = "password";
+		String url = "jdbc:mysql://localhost:3306/busmonitoringsystem?usessl=false";
+			
+		try {
+			conn = DriverManager.getConnection(url,userName,password); 
+			columns = new ArrayList<String>();
 				
-			try {
-				conn = DriverManager.getConnection(url,userName,password); 
-				columns = new ArrayList<String>();
-					
-				DatabaseMetaData md = conn.getMetaData();
-				ResultSet rs = md.getColumns(null, null, "details1", "%");
-				while(rs.next())
-				{
-					columns.add(rs.getString(4));
-				}
-					
-					
-				Statement stmt = conn.createStatement();
-				for (int i = 0; i<columns.size(); i++)
-				{
-					String query = "UPDATE details1 SET capacityzones =" + finalBusZone + "where busnumber =" + finalBusID; 
-					stmt.executeUpdate(query);
-				}
-					
-				stmt.close();
-				conn.close();
-				} catch (SQLException e) 
+			DatabaseMetaData md = conn.getMetaData();
+			ResultSet rs = md.getColumns(null, null, "details2", "%");
+			while(rs.next())
+			{
+				columns.add(rs.getString(4));
+			}
 				
-				{
-					e.printStackTrace();
-				}
+				
+			Statement stmt = conn.createStatement();
+			for (int i = 0; i<columns.size(); i++)
+			{
+			String query = "UPDATE details2 SET capacityzone1 = '" + finalBusZone + "' where busnumber = "+ finalBusID;
+			String query2 = "UPDATE details2 SET capacityzone2 = '" + finalBusZone + "' where busnumber = "+ finalBusID;
+				stmt.executeUpdate(query);
+				stmt.executeUpdate(query2);
+			}
+				
+			stmt.close();
+			conn.close();
+			} catch (SQLException e) 
+			
+			{
+				e.printStackTrace();
+			}
 	}
 	
 	public static void main(String[] args) throws SQLException {
@@ -124,8 +117,7 @@ public class BusCenter{
 		int portReceive = 120;
 		Bus testBus1 = new Bus(99);
 		allBusses.add(testBus1);
-		//testCenter.UDPReceive(portReceive);
-		testCenter.updateDatabase();
+		testCenter.UDPReceive(portReceive);
 	}
 
 }
