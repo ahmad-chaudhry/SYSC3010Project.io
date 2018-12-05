@@ -23,7 +23,6 @@ public class Bus104{
 	//initializer for the bus
 	public Bus104(Integer ID) {
 		this.ID = 104;
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getID() {
