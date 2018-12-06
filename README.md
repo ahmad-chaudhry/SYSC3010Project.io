@@ -9,7 +9,7 @@ The Progress Bar, Notification Push,Text/Progress bar's changing colors and Appl
 2) Android studio libraries were used for including a Progress bar, Sending Notification to notification bar and using RetroFit.
 3) The application is responsible to checks if user's input is a supported bus number else the user is returned an error and user can input a correct bus number. 
 4) Depending on the Bus's Current Capacity zone, the process bar's color and length changes for visual aid and a notification is also sent to the user if the bus is in havey traffic zone.
-5) I tried to include OC Transport's API but got no success. So the destination of the Bus was hard coded in the application and is NOT Live.
+5) I tried to include OC Transport's API but could not finish in time for demo. So the destination of the Bus was hard coded in the application and is NOT Live.
 
 ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 Team Members: Jaskaran Singh 
