@@ -3,7 +3,7 @@ SYSC3310 Project Repository
 
 Hardware Set-Up:
 
-Connect ultrasonic sensors to arduino using schematics provided (Figure x)
+Connect ultrasonic sensors to arduino using schematics provided (Figure 3 from Report)
 
 Connect arduino to Pi using arduino cable
 
