@@ -1,47 +1,57 @@
 # SYSC3310Project
 SYSC3310 Project Repository
-Fall 2018
 
 Hardware Set-Up:
 
-  Connect ultrasonic sensors to arduino using schematics provided (Figure x)
+Connect ultrasonic sensors to arduino using schematics provided (Figure x)
 
-  Connect arduino to Pi using arduino cable
+Connect arduino to Pi using arduino cable
+
 
 Ras-Pi & Software Set-Up:
 
-  Add jssc package to blue-jay 
 
-  Create project and import jssc package
+Add jssc package to blue-jay 
 
-  Go to GITHUB and download 
+Create project and import jssc package
 
-  For Sender (Bus): Bus#.java, and Arduino_RPI_Comm_Final.ino
+Go to GITHUB and download 
 
-  For Receiver (Bus Center):  BusCenter.java.
+For Sender (Bus): Bus#.java, and Arduino_RPI_Comm_Final.ino
 
-  From the receiver initialize the database.
+For Receiver (Bus Center):  BusCenter.java, getData.php
 
-Android App:
+From the receiver initialize the database.
 
-  Android Studio: Minimum requirement of the application was to display the capacity zone of the bus. The Progress Bar, Notification Push,Text/Progress bar changing colors and Applications Icon were all added to build a good looking and Practical application.
+Download Apache2, PhpMyAdmin, and MySQL onto the Pi
 
-  Main activity.Java is where all of the processing for input and outtakes place. The APi.JAVA file is responsible for using Retrofit Lib and connected the application to the Database and calling the PHP file which fetches JSon data.
+Paste getData.php file in var/WWW/html folder in Bus Center RPI 
 
-  Android studio libraries were used for including a Progress bar, Sending Notification to notification bar and using RetroFit.
+Enter: https://(IP_ADDRESS)/phpmyadmin into the browser in the RPI
 
-  The application is responsible to check if user's input is a supported bus number else the user is returned an error and user can input a correct bus number.
+Inside phpMyAdmin create new database busmonitoringsystem
 
-  Depending on the Bus's Current Capacity zone, the process bar's color and length changes for visual aid and a notification is also sent to the user if the bus is in heavy traffic zone.
+Inside the database create a new table names details2 with required fields
+
+
+Android App: 
+
+
+Enter the database’s IP address in the android app code (API.java file).
+
+The phone must be connected to the same wireless connection as the database.
+
+Launch the application,Enter desired bus number and hit get data button
 
 Running the System:
 
-  Run the arduino code from the Bus Raspberry Pi (Arduino_RPI_Comm_Final.ino)
 
-  Run the Java code (Bus#.java and BusCenter.java)
+Run the arduino code from the Bus Raspberry Pi (Arduino_RPI_Comm_Final.ino)
 
-  (At any time, the app could be opened but until passengers are added to the busses, it shows green)
+Run the Java code (Bus#.java and BusCenter.java)
 
-  Add passengers (add at-least 3 to move to yellow zone) on the bus, search that bus in the app, and a safety zone of yellow should appear.
+(At any time, the app could be opened but until passengers are added to the busses, it shows green)
+
+Add passengers (add at-least 3 to move to yellow zone) on the bus, search that bus in the app, and a safety zone of yellow should appear.
 
 
