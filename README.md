@@ -5,15 +5,21 @@ Fall 2018
 Hardware Set-Up:
 
 Connect ultrasonic sensors to arduino using schematics provided (Figure x)
+
 Connect arduino to Pi using arduino cable
 
 Ras-Pi & Software Set-Up:
 
 Add jssc package to blue-jay 
+
 Create project and import jssc package
+
 Go to GITHUB and download 
+
 For Sender (Bus): Bus#.java, and Arduino_RPI_Comm_Final.ino
+
 For Receiver (Bus Center):  BusCenter.java.
+
 From the receiver initialize the database.
 
 Android App:
