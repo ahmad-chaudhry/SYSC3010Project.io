@@ -1,10 +1,11 @@
 //define Pin Numbers
-int trigPin1 = 4; // Sensor 1 trigPin
-int echoPin1 = 5; // Sensor 1 echoPin
-int trigPin2 = 9; // Sensor 2 trigPin
-int echoPin2 = 10; // Sensor 2 echoPin
-int trigPin3 = 12; // Sensor 3 trigPin
-int echoPin3 = 13; // Sensor 3 echoPin
+int echoPin1 = 4; // Sensor 1 echoPin
+int trigPin1 = 5; // Sensor 1 trigPin
+int echoPin2 = 9; // Sensor 2 echoPin
+int trigPin2 = 10; // Sensor 2 trigPin
+int echoPin3 = 12; // Sensor 3 echoPin
+int trigPin3 = 13; // Sensor 3 trigPin
+
 
 //Initialize trigger variables
 int trigger1 = 0;
